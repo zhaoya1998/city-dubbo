@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhaoya.dao.StudentDao">
+		<resultMap type="Student" id="stuMapper">
+		<id column="id" property="id"></id>
+		<result column="shengId" property="shengId"></result>
+		<result column="shiId" property="shiId"></result>
+		<result column="xianId" property="xianId"></result>
+		<association property="sheng" column="shengId" select="findAreaById"></association>
+		<association property="shi" column="shiId" select="findAreaById"></association>
+		<association property="xian" column="xianId" select="findAreaById"></association>
+	</resultMap>
+	
+	<select id="list" resultMap="stuMapper">
+		SELECT id,header_img as headerImg,shengId,shiId,xianId,name,create_time as createTime
+		from tb_student
+	</select>
+
+<!-- 	int add(Student stu); -->
+	   <insert id="add">
+	   	insert into tb_student(header_img,shengId,shiId,xianId,name,create_time)
+	   	     values(#{headerImg},#{shengId},#{shiId},#{xianId},#{name},#{createTime})
+	   </insert>
+
+<!-- 	int update(Student stu); -->
+	<update id="update">
+		update tb_student set header_img = #{headerImg},
+			shengId=#{shengId},
+			shiId=#{shiId},
+		  	xianId=#{xianId},
+		  	name=#{name}
+		  	WHERE id=#{id}
+    </update>
+
+	<!-- List<Area> listByPid(int pid); -->
+	<select id="listByPid" resultType="Area">
+		select * from tb_city where pid=#{value}
+	</select>
+	<select id="getById" resultMap="stuMapper">
+		SELECT id,header_img as headerImg,shengId,shiId,xianId,name,create_time as createTime
+		from tb_student where id=#{value}
+	</select>
+	
+	<select id="findAreaById" resultType="Area">
+		select * from tb_city where id=#{value}
+	</select>
+</mapper>
